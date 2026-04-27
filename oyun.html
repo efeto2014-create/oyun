@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game</title>
+</head>
+<body>
+    <h1>Math Challenge!</h1>
+    <p>Welcome to the Math Game!</p>
+    <p>Your score: <span id="score">0</span></p>
+    <button id="start-button">Start Game</button>
+    <script>
+        let score = 0;
+        const scoreDisplay = document.getElementById('score');
+        const button = document.getElementById('start-button');
+
+        button.addEventListener('click', () => {
+            const num1 = Math.floor(Math.random() * 10);
+            const num2 = Math.floor(Math.random() * 10);
+            const correctAnswer = num1 + num2;
+            const userAnswer = parseInt(prompt(`What is ${num1} + ${num2}?`));
+
+            if (userAnswer === correctAnswer) {
+                score += 1;
+                alert('Correct!');
+            } else {
+                alert('Incorrect! The correct answer was ' + correctAnswer);
+            }
+
+            scoreDisplay.innerText = score;
+        });
+    </script>
+</body>
+</html>
