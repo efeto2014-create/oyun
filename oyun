@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Matematik Oyun</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0b1020;
+color:white;
+text-align:center;
+user-select:none;
+}
+
+/* MENU */
+#menu{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:15px;
+}
+
+button{
+padding:15px;
+width:70%;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:white;
+cursor:pointer;
+}
+
+.screen{display:none;}
+.active{display:block;}
+
+/* GAME */
+#game{position:relative;height:100vh;}
+
+#hud{
+display:flex;
+justify-content:space-between;
+padding:10px;
+}
+
+.box{
+background:#1f2937;
+padding:6px 10px;
+border-radius:10px;
+}
+
+#timer{
+position:absolute;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+background:#1f2937;
+padding:6px 12px;
+border-radius:10px;
+}
+
+#question{
+margin-top:80px;
+font-size:32px;
+}
+
+#options button{
+margin:10px;
+padding:15px;
+font-size:20px;
+border-radius:10px;
+}
+
+#win{
+font-size:40px;
+margin-top:100px;
+display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- MENU -->
+<div id="menu" class="screen active">
+<h1>🎮 Matematik Oyun</h1>
+
+<button onclick="start()">Başlat</button>
+<button onclick="loadGame()">Devam Et</button>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+
+<div id="hud">
+<div class="box" id="p1">P1 HP: 100</div>
+<div class="box" id="p2">P2 HP: 100</div>
+</div>
+
+<div id="timer">⏳ 5</div>
+
+<div id="question"></div>
+<div id="options"></div>
+
+<div id="win"></div>
+
+</div>
+
+<script>
+
+let p1=100,p2=100;
+let correct=0;
+let turn=1;
+let t;
+
+/* START */
+function start(){
+document.getElementById("menu").classList.remove("active");
+document.getElementById("game").classList.add("active");
+newQ();
+timer();
+}
+
+/* QUESTION */
+function newQ(){
+let a=Math.floor(Math.random()*10)+1;
+let b=Math.floor(Math.random()*10)+1;
+
+correct=a*b;
+
+document.getElementById("question").innerText=a+" x "+b+" = ?";
+
+let arr=[correct];
+
+while(arr.length<4){
+let r=Math.floor(Math.random()*100);
+if(!arr.includes(r))arr.push(r);
+}
+
+arr.sort(()=>Math.random()-0.5);
+
+let opt=document.getElementById("options");
+opt.innerHTML="";
+
+arr.forEach(v=>{
+let b=document.createElement("button");
+b.innerText=v;
+b.onclick=()=>check(v);
+opt.appendChild(b);
+});
+}
+
+/* ANSWER */
+function check(v){
+
+if(v==correct){
+if(turn==1)p2-=20;
+else p1-=20;
+}else{
+if(turn==1)p1-=10;
+else p2-=10;
+}
+
+document.getElementById("p1").innerText="P1 HP: "+p1;
+document.getElementById("p2").innerText="P2 HP: "+p2;
+
+if(p1<=0)win("P2 Kazandı 🏆");
+if(p2<=0)win("P1 Kazandı 🏆");
+
+turn=turn==1?2:1;
+
+newQ();
+timer();
+}
+
+/* TIMER */
+function timer(){
+clearInterval(t);
+let s=5;
+document.getElementById("timer").innerText="⏳ "+s;
+
+t=setInterval(()=>{
+s--;
+document.getElementById("timer").innerText="⏳ "+s;
+
+if(s<=0){
+clearInterval(t);
+check(-1);
+}
+},1000);
+}
+
+/* WIN */
+function win(text){
+document.getElementById("win").style.display="block";
+document.getElementById("win").innerText=text;
+clearInterval(t);
+}
+
+/* SAVE / LOAD */
+function loadGame(){
+alert("Şu an basit sürüm (istersen kayıt eklerim 👍)");
+}
+
+</script>
+
+</body>
+</html>
